@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+
+<head>
+    <link rel="preload" as="image" href="https://react-email-demo-3kjjfblod-resend.vercel.app/static/airbnb-logo.png" />
+    <link rel="preload" as="image" href="https://react-email-demo-3kjjfblod-resend.vercel.app/static/airbnb-review-user.jpg" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px 0 48px;
+            width: 580px;
+        }
+
+        .logo, .profile-image {
+            display: block;
+            margin: 0 auto;
+            border: none;
+            text-decoration: none;
+        }
+
+        .logo {
+        margin: 0; /* Remove any margin to place it in the top left */
+        height: 30px;
+        width: 96px;
+        display: block; /* Ensure it behaves as a block element */
+        margin-bottom: 10px;
+    }
+
+    .profile-image {
+    margin-bottom: 16px;
+    width: 90%; /* Set width to 70% */
+    height: 30vh; /* Set height to 30vh */
+    object-fit: cover; /* This ensures the image covers the area without distortion */
+    display: block; /* Ensures the image behaves as a block element */
+    margin-left: auto; /* Center the image horizontally */
+    margin-right: auto; /* Center the image horizontally */
+    border-radius: 10px;
+}
+
+        .header-text {
+            font-size: 32px;
+            line-height: 1.3;
+            margin: 16px 0;
+            font-weight: 400;
+            color: #484848;
+            text-align: center;
+        }
+
+        .content-box { 
+            /* font-size: 18px;
+            line-height: 1.4;
+            margin: 16px 0; */
+            color: #484848;
+            padding: 24px;
+            background-color: #f2f3f3;
+            /* border-radius: 4px; */
+         }
+
+        .info-list {
+            font-size: 18px;
+            line-height: 2.5;
+            margin: 16px 0;
+            color: #484848;
+            background-color: #f2f3f3;
+        }
+
+        .info-list li {
+            list-style-type: none;
+            margin-bottom: 8px;
+        }
+
+        .button {
+            line-height: 100%;
+            text-decoration: none;
+            display: block;
+            max-width: 100%;
+            background-color: #136897;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 18px;
+            padding: 19px;
+            text-align: center;
+        }
+
+        .common-questions {
+            font-size: 18px;
+            line-height: 1.4;
+            margin: 16px 0;
+            color: #484848;
+            font-weight: 700;
+        }
+
+        .question-link {
+            color: #ff5a5f;
+            text-decoration: none;
+            font-size: 18px;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .footer {
+            font-size: 14px;
+            line-height: 24px;
+            color: #9ca299;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .footer a {
+            color: #9ca299;
+            text-decoration: underline;
+        }
+
+        .footer a:hover {
+            color: #ff5a5f; /* Adds a hover effect */
+        }
+
+        .divider {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #eaeaea;
+            border-color: #cccccc;
+            margin: 20px 0;
+        }
+       
+
+    </style>
+
+</head>
+
+<body>
+    <table class="container"  cellpadding="0" cellspacing="0" role="presentation">
+        <tbody>
+            <tr>
+                <td>
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                        <tbody>
+                            <tr>
+                                <td><img class="logo" alt="Airbnb" src="https://enrichminds.co.in/assets/logo-qxzcuzYY.png" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table  width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                        <tbody>
+                            <tr>
+                                <td><img class="profile-image" alt="Enrich" src="https://tse4.mm.bing.net/th?id=OIP.7bEsAgPJGeD2lisc1mpcpAHaEK&pid=Api&P=0&h=180" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table width="100%"  cellpadding="0" cellspacing="0" role="presentation" style="padding-bottom:20px">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p class="header-text">User Personal Information Received</p>
+                                    <!-- <p class="content-box" style="font-size: 18px; margin: 3; padding: 10px 0; font-weight: 400;padding-left: 5px; ">Thank you for providing your information,Here are the details we have received:</p> -->
+                                    <ul class="info-list">
+                                        <li><strong>Name:</strong> ${name}</li>
+                                        <li><strong>Email:</strong> ${email}</li>
+                                        <li><strong>Number:</strong>${number}</li>
+                                        <li><strong>Age:</strong>${age}</li>
+                                        <li><strong>Assessment Type:</strong> ${selectedAssessment}</li>
+                                        <li><strong>Date and Time:</strong> ${selectDate}</li>
+                                        <!-- <li><strong>Payment Method:</strong> ${paymentMethod}</li> -->
+                                        <li><strong>Payment Details:</strong> ${paymentDetails}</li>
+                                        <li><strong>Your slot Details:</strong> ${slots}</li>
+                                    </ul>
+                                    <a class="button" href="" target="_blank">Click Me</a>
+                                    <!-- <p style="font-size:18px;line-height:1.4;margin:16px 0;color:#484848;padding-bottom:16px">    We appreciate your feedback! If you have any further questions or comments, please reply to this email, and we'll get back to you as soon as possible                                       .<a href="mailto:support@example.com">support@example.com</a></p> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr class="divider" />
+
+                   
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
