@@ -1,13 +1,15 @@
 const connection = require("../Model/DB_connection.js");
 
 class BlogModel {
-  static async createBlog(title, content, image, author) {
+  static async createBlog(title, content,category, blog_image,thumbnail, author, metaKeywords, metaDescription) {
     return new Promise((resolve, reject) => {
-      const query =
-        "INSERT INTO blogs (blog_title, blog_body, blog_image, blog_author) VALUES (?, ?, ?, ?)";
+      const query = `
+        INSERT INTO blogs (blog_title, blog_body, blog_category, blog_image, blog_thumbnail, blog_author, blog_meta_keywords, blog_meta_description) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `;
       connection.query(
         query,
-        [title, content, image, author],
+        [title, content,category, blog_image, thumbnail, author, metaKeywords, metaDescription],
         (err, results) => {
           if (err) return reject(err);
           resolve(results);
@@ -15,6 +17,7 @@ class BlogModel {
       );
     });
   }
+  
 
   static async getAllBlogs() {
     return new Promise((resolve, reject) => {
@@ -32,7 +35,7 @@ class BlogModel {
       connection.query(query, [id], (err, results) => {
         if (err) return reject(err);
 
-        // After retrieving the blog, update the visitors count
+        // Update visitors count after retrieving the blog
         const updateVisitorsQuery =
           "UPDATE blogs SET blog_visitors_count = blog_visitors_count + 1 WHERE id = ?";
         connection.query(updateVisitorsQuery, [id], (updateErr) => {
@@ -43,13 +46,23 @@ class BlogModel {
     });
   }
 
-  static async updateBlog(id, title, body, image, author) {
+  static async updateBlog(
+    id,
+    title,
+    body,
+    image,
+    thumbnail,
+    author,
+    metaKeywords,
+    metaDescription
+  ) {
+    console.log(body);
     return new Promise((resolve, reject) => {
       const query =
-        "UPDATE blogs SET blog_title = ?, blog_body = ?, blog_image = ?, blog_author = ? WHERE id = ?";
+        "UPDATE blogs SET blog_title = ?, blog_body = ?, blog_image = ?, blog_thumbnail = ?, blog_author = ?, blog_meta_keywords = ?, blog_meta_description = ? WHERE id = ?";
       connection.query(
         query,
-        [title, body, image, author, id],
+        [title, body, image, thumbnail, author, metaKeywords, metaDescription, id],
         (err, results) => {
           if (err) return reject(err);
           resolve(results);
@@ -67,14 +80,12 @@ class BlogModel {
       });
     });
   }
-  static getLatestBlog(callback) {
-    const query = " SELECT * FROM blogs ORDER BY blog_date DESC LIMIT 4";
+
+  static getLatestBlog() {
+    const query = "SELECT * FROM blogs ORDER BY blog_date DESC LIMIT 4";
     return new Promise((resolve, reject) => {
       connection.query(query, (err, results) => {
-        if (err) {
-          // console.log(err);
-          return reject(err);
-        }
+        if (err) return reject(err);
         resolve(results);
       });
     });

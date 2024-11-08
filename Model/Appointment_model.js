@@ -1,50 +1,97 @@
-// appointmentModel.js
-const db = require('../Model/DB_connection'); // Database connection file
+const db = require("../Model/DB_connection"); // Database connection file
 
 const Appointment = {
-    create: (data, callback) => {
-        const sql = `INSERT INTO appointments (name, email, number, age, assessmentType, selectDate, slot, paymentDetails ) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        db.query(sql, [
-            data.name,
-            data.email,
-            data.number,
-            data.age,
-            data.selectedAssessment,
-            data.selectDate,
-            data.slots,
-            data.paymentDetails
+  create: (data) => {
+    return new Promise((resolve, reject) => {
+      const sql = `INSERT INTO appointments (name, email, number, location, assessmentType,otherAssessement, selectDate, slot, paymentDetails,isConsentChecked,isTermsChecked) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`;
+      db.query(
+        sql,
+        [
+          data.name,
+          data.email,
+          data.number,
+          data.location,
+          data.selectedAssessment,
+          data.otherAssessement,
+          data.selectDate,
+          data.slots,
+          data.paymentDetails,
+          data.isConsentChecked,
+          data.isTermsChecked,
+        ],
+        (error, results) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(results);
+        }
+      );
+    });
+  },
 
-            // data.uploadImg
-        ], (error, results) => {
-            // if (error) {
-            //     console.error('Database error:', error); // Log the error here
-            // }
-            callback(error, results);
-        });
-    },
+  getAll: () => {
+    return new Promise((resolve, reject) => {
+      const sql = "SELECT * FROM appointments";
+      db.query(sql, (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      });
+    });
+  },
 
+  getById: (id) => {
+    return new Promise((resolve, reject) => {
+      const sql = "SELECT * FROM appointments WHERE id = ?";
+      db.query(sql, [id], (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      });
+    });
+  },
 
-    getAll: (callback) => {
-        const sql = 'SELECT * FROM appointments';
-        db.query(sql, callback);
-    },
+  update: (id, data) => {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE appointments SET name = ?, email = ?, number = ?, age = ?, assessmentType = ?, selectDate = ?, 
+                         paymentMethod = ?, paymentDetails = ?, slot = ? WHERE id = ?`;
+      db.query(
+        sql,
+        [
+          data.name,
+          data.email,
+          data.number,
+          data.age,
+          data.assessmentType,
+          data.selectDate,
+          data.paymentMethod,
+          data.paymentDetails,
+          id,
+        ],
+        (error, results) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(results);
+        }
+      );
+    });
+  },
 
-    getById: (id, callback) => {
-        const sql = 'SELECT * FROM appointments WHERE id = ?';
-        db.query(sql, [id], callback);
-    },
-
-    update: (id, data, callback) => {
-        const sql = `UPDATE appointments SET name = ?, email = ?, number = ?, age = ?, assessmentType = ?, selectDate = ?, 
-                     paymentMethod = ?, paymentDetails = ?, slot = ? WHERE id = ?`;
-        db.query(sql, [data.name, data.email, data.number, data.age, data.assessmentType, data.selectData, data.paymentMethod, data.paymentDetails, data.uploadImg, id], callback);
-    },
-
-    delete: (id, callback) => {
-        const sql = 'DELETE FROM appointments WHERE id = ?';
-        db.query(sql, [id], callback);
-    }
+  delete: (id) => {
+    return new Promise((resolve, reject) => {
+      const sql = "DELETE FROM appointments WHERE id = ?";
+      db.query(sql, [id], (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      });
+    });
+  },
 };
 
 module.exports = Appointment;

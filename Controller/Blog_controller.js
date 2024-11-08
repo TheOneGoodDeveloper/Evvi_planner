@@ -1,9 +1,7 @@
-const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const multer = require("multer");
+
 const BlogModel = require("../Model/Blog_model.js");
-const upload = require("../Middleware/multer_config.js");
 
 // Helper function to delete old image
 const deleteOldImage = (imagePath) => {
@@ -17,34 +15,46 @@ const deleteOldImage = (imagePath) => {
 // CREATE BLOG
 const createBlog = async (req, res) => {
   try {
-    const { title, content, author } = req.body;
+    const { title, content, author, metaKeywords, metaDescription } = req.body;
+
+    // Retrieve filenames from `req.files`
+    const blogImage = req.files.image ? req.files.image[0].filename : null;
+    const blogThumbnail = req.files.thumbnail
+      ? req.files.thumbnail[0].filename
+      : null;
+
     const result = await BlogModel.createBlog(
       title,
       content,
-      req.file.filename,
-      author
+      blogImage,
+      blogThumbnail,
+      author,
+      metaKeywords,
+      metaDescription
     );
-    console.log(req.body)
-    console.log(req.file)
-    console.log("Blog created successfully");
+
     return res
       .status(201)
       .json({ status: true, message: "Blog created successfully" });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ status: false, message: "Internal server error", error });
   }
 };
-// };
 
 // GET ALL BLOGS
 const getAllBlogs = async (req, res) => {
   try {
     const blogs = await BlogModel.getAllBlogs();
-    console.log(blogs);
-    if(blogs.length > 0){
-    return res.status(200).json({ status: true, blogs })}
+    // console.log(blogs);
+
+    if (blogs.length > 0) {
+      return res.status(200).json({ status: true, blogs });
+    } else {
+      return res.status(404).json({ status: false, message: "No blogs found" });
+    }
   } catch (error) {
     return res
       .status(500)
@@ -57,10 +67,12 @@ const getBlogById = async (req, res) => {
   try {
     const id = req.params.id;
     const blog = await BlogModel.getBlogById(id);
+
     console.log(req.params);
     if (blog.length === 0) {
       return res.status(404).json({ status: false, message: "Blog not found" });
     }
+
     return res.status(200).json({ status: true, blog });
   } catch (error) {
     return res
@@ -69,63 +81,67 @@ const getBlogById = async (req, res) => {
   }
 };
 
-
 // UPDATE BLOG
+
 const updateBlog = async (req, res) => {
   try {
-    const { id, title, body, author } = req.body;
-    const newImage = req.file ? req.file.filename :req.body.image ;
-    // Fetch the old blog to get the current image
+    const { id, title, body, author, metaKeywords, metaDescription } = req.body;
+    
+    // Check for uploaded files for `blog_image` and `thumbnail`
+    const newBlogImage = req.files?.image ? req.files.image[0].filename : req.body.blog_image;
+    const newThumbnail = req.files?.thumbnail ? req.files.thumbnail[0].filename : req.body.thumbnail;
+
     const blog = await BlogModel.getBlogById(id);
     if (blog.length === 0) {
       return res.status(404).json({ status: false, message: "Blog not found" });
     }
 
-    // console.log(blog);
-    // Delete the old image if a new image is uploaded
-    if (req.file && blog[0].blog_image) {
-      // console.log("image");
-      const oldImagePath = path.join(
-        __dirname,
-        "../blog_images/",
-        blog[0].blog_image
-      );
-      // console.log(oldImagePath);
-      deleteOldImage(oldImagePath);
+    // Delete old `blog_image` if a new one is uploaded
+    if (req.files?.image && blog[0].blog_image) {
+      const oldBlogImagePath = path.join(__dirname, "../Assets/blog_images", blog[0].blog_image);
+      deleteOldImage(oldBlogImagePath);
     }
 
+    // Delete old `thumbnail` if a new one is uploaded
+    if (req.files?.thumbnail && blog[0].thumbnail) {
+      const oldThumbnailPath = path.join(__dirname, "../Assets/blog_images", blog[0].thumbnail);
+      deleteOldImage(oldThumbnailPath);
+    }
+
+    // Update the blog entry in the database
     const result = await BlogModel.updateBlog(
       id,
       title,
-      body,
-      newImage || blog[0].image,
-      author
+      body || blog[0].blog_body,
+      newBlogImage || blog[0].blog_image,
+      newThumbnail || blog[0].thumbnail,
+      author,
+      metaKeywords,
+      metaDescription
     );
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ status: false, message: "Blog not found" });
     }
 
-    return res
-      .status(200)
-      .json({ status: true, message: "Blog updated successfully" });
+    return res.status(200).json({ status: true, message: "Blog updated successfully" });
   } catch (error) {
     console.log(error);
-    return res
-      .status(500)
-      .json({ status: false, message: "Internal server error", error });
+    return res.status(500).json({ status: false, message: "Internal server error", error });
   }
 };
+
 
 // DELETE BLOG
 const deleteBlog = async (req, res) => {
   try {
     const id = req.params.id;
     const blog = await BlogModel.getBlogById(id);
+
     if (blog.length === 0) {
       return res.status(404).json({ status: false, message: "Blog not found" });
     }
 
-    // Delete the blog image from the folder
     if (blog[0].blog_image) {
       const imagePath = path.join(
         __dirname,
@@ -149,13 +165,16 @@ const deleteBlog = async (req, res) => {
       .json({ status: false, message: "Internal server error", error });
   }
 };
+
+// LATEST BLOGS
 const latestBlogs = async (req, res) => {
   try {
-    const blogs = await BlogModel?.getLatestBlog();
-    // console.log(blogs); // Adjusted to get the latest blog
-    if (!blogs && blogs?.length == 0) {
+    const blogs = await BlogModel.getLatestBlog();
+
+    if (!blogs || blogs.length === 0) {
       return res.status(404).json({ status: false, message: "No blogs found" });
     }
+
     return res.status(200).json({ status: true, blogs });
   } catch (error) {
     return res
@@ -163,6 +182,8 @@ const latestBlogs = async (req, res) => {
       .json({ status: false, message: "Internal server error", error });
   }
 };
+
+
 
 module.exports = {
   createBlog,

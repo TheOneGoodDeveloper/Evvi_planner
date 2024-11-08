@@ -1,14 +1,17 @@
 const Newsletter = require("../Model/NewsLetter_model.js");
 const Subscription = require("../Model/Subscriber_model.js");
 const EmailHistory = require("../Model/EmailHistory_model.js");
+const Safety = require("../Model/Safety_model.js");
+const changeAbit = require("../Model/ChangeAbit_model.js"); 
 // const { subscribe } = require("../Routes/message_route");
 const {sendBulkMail} = require("../Mailsend/mailsendto.js")
 // Create a new newsletter
 const createNewsletter = async (req, res) => {
-  const { title, content, image, status } = req.body;
+  const { title, author,content, image } = req.body;
   try {
     const result = await Newsletter.createNewsletter({
       title,
+      author,
       content,
       image,
       status: "sent",
@@ -183,8 +186,6 @@ const sendNewsLetterToSubscribers = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   createNewsletter,

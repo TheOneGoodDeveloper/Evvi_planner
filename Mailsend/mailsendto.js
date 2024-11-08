@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const dotenv = require("dotenv");
 
+
 dotenv.config();
 
 exports.sendMail = async (result) => {
@@ -206,7 +207,7 @@ exports.sendMailforResetPassword = async (email,resetToken) => {
                   </p>
                   <div style="text-align: center; margin: 20px 0">
                     <a
-                      href="https://www.evvisolutions.com//resetPassword?token=${resetToken}"
+                      href="https://www.enrichminds.con.in//resetPassword?token=${resetToken}"
                       style="
                         background-color: #4caf50;
                         color: #ffffff;
@@ -231,7 +232,7 @@ exports.sendMailforResetPassword = async (email,resetToken) => {
               <tr>
                 <td style="text-align: center; padding-top: 20px">
                   <a
-                    href="https://www.evvisolutions.com/Blog"
+                    href="https://www.enrichminds.con.in/Blog"
                     style="color: #b7b7b7; text-decoration: underline"
                     >Our blog</a
                   >
@@ -327,9 +328,14 @@ exports.sendBulkMail = async ({to, subject, content})=> {
         return 'failed';
     }
 }
-exports.sendEmailforAppointments = async(frommail,recipient, subject, templateData, templateName) => {
+exports.sendEmailforAppointments = async(frommail,recipient, subject, templateData, templateName, icsFilePath) => {
 
-    
+    console.log(frommail,recipient, subject, templateData, templateName);
+
+    if (!fs.existsSync(icsFilePath)) {
+      console.error('ICS file not found:', icsFilePath);
+      return;
+  }
   const transporter = nodemailer.createTransport({
       host: process.env["EMAIL_HOST"],
       port: process.env["EMAIL_PORT"],
@@ -339,7 +345,7 @@ exports.sendEmailforAppointments = async(frommail,recipient, subject, templateDa
           pass: process.env.EMAIL_PASS,
       },
   });   // Define the path to your HTML templates
-  const templatePath = path.join(__dirname, `../Email_Template/${templateName}.html`);
+  const templatePath = path.join(__dirname, `./Email_Template/${templateName}.html`);
 
   // Read the template file
   fs.readFile(templatePath, 'utf8', (err, html) => {
@@ -351,14 +357,14 @@ exports.sendEmailforAppointments = async(frommail,recipient, subject, templateDa
       // Replace placeholders in the template with actual data
       const emailHtml = html
           .replace(/\${name}/g, templateData.name)
-          .replace(/\${email}/g, templateData.email)
-          .replace(/\${number}/g, templateData.number)
-          .replace(/\${age}/g, templateData.age)
-          .replace(/\${selectedAssessment}/g, templateData.selectedAssessment)
-          .replace(/\${selectDate}/g, templateData.selectDate)            
+          // .replace(/\${email}/g, templateData.email)
+          // .replace(/\${number}/g, templateData.number)
+          .replace(/\${location}/g, templateData.location)
+          .replace(/\${service}/g, templateData.selectedAssessment)
+          .replace(/\${dateTime}/g, templateData.selectDate + " " + templateData.slots)            
           // .replace(/\${paymentMethod}/g, templateData.paymentMethod)
-          .replace(/\${paymentDetails}/g, templateData.paymentDetails)
-          .replace(/\${slots}/g, templateData.slots);
+          // .replace(/\${paymentDetails}/g, templateData.paymentDetails)
+          // .replace(/\${slots}/g, templateData.slots);
          
 
       // Set up email data
@@ -366,15 +372,25 @@ exports.sendEmailforAppointments = async(frommail,recipient, subject, templateDa
           from:frommail ,
           to: recipient,
           subject: subject,
-          html: emailHtml // Send the HTML content
+          html: emailHtml,
+          attachments: [
+            {
+                filename: path.basename(icsFilePath),
+                path: icsFilePath,
+                contentType: 'text/calendar'
+            }
+        ] 
       };
 
       // Send the email
       transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
               return console.error('Error sending email:', error);
+          }else{
+
+            console.log('Email sent:', info.response);
+            // return info;
           }
-          console.log('Email sent:', info.response);
       });
 }
 )};
