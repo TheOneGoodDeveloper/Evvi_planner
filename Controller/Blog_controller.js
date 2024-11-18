@@ -18,20 +18,20 @@ const createBlog = async (req, res) => {
     const { title, content, author, metaKeywords, metaDescription } = req.body;
 
     // Retrieve filenames from `req.files`
-    const blogImage = req.files.image ? req.files.image[0].filename : null;
-    const blogThumbnail = req.files.thumbnail
-      ? req.files.thumbnail[0].filename
-      : null;
+    const blog_image = req.files.image ? req.files.image[0].filename : null;
+    const thumbnail = req.files.thumbnail ? req.files.thumbnail[0].filename : null;
+    const category = "Blogs";  // Set the category status
 
-    const result = await BlogModel.createBlog(
+    const result = await BlogModel.createBlog({
       title,
       content,
-      blogImage,
-      blogThumbnail,
+      category,
+      blog_image,
+      thumbnail,
       author,
       metaKeywords,
       metaDescription
-    );
+    });
 
     return res
       .status(201)
@@ -43,6 +43,7 @@ const createBlog = async (req, res) => {
       .json({ status: false, message: "Internal server error", error });
   }
 };
+
 
 // GET ALL BLOGS
 const getAllBlogs = async (req, res) => {
@@ -86,7 +87,7 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { id, title, body, author, metaKeywords, metaDescription } = req.body;
-    
+      console.log(req.body);
     // Check for uploaded files for `blog_image` and `thumbnail`
     const newBlogImage = req.files?.image ? req.files.image[0].filename : req.body.blog_image;
     const newThumbnail = req.files?.thumbnail ? req.files.thumbnail[0].filename : req.body.thumbnail;

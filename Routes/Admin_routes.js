@@ -102,13 +102,13 @@ AdminRoute.post("/createChangeAbit",authMiddleware,changeAbitUpload,createChange
 AdminRoute.put("/updateChangeAbit",authMiddleware,changeAbitUpload,updateChangeAbit);
 AdminRoute.post("/getallChangeAbitList",authMiddleware,getAllChangeAbits)
 AdminRoute.get("/getchangeAbit/:id",authMiddleware,getChangeAbitById)
-AdminRoute.get("/deleteChangeAbit",authMiddleware,deleteChangeAbit);
+AdminRoute.delete("/deleteChangeAbit/:id",authMiddleware,deleteChangeAbit);
 // Safety Net
 AdminRoute.post("/createSafety",authMiddleware,safetyUpload,createSafety)
 AdminRoute.put("/updateSafety",authMiddleware,safetyUpload,updateSafety);
 AdminRoute.post("/getAllSafetyList",authMiddleware,getAllSafety);
 AdminRoute.get("/getSafety/:id",authMiddleware,getSafetyById)
-AdminRoute.get("/deleteSafety",authMiddleware,deleteSafety);
+AdminRoute.delete("/deleteSafety/:id",authMiddleware,deleteSafety);
 // AdminRoute.
 // reset password
 AdminRoute.post("/requestPasswordReset", authMiddleware, requestPasswordReset);
@@ -124,4 +124,5 @@ AdminRoute.post("/hideComment", authMiddleware, hideComment);
 AdminRoute.post("/unhideComment", authMiddleware, unhideComment);
 AdminRoute.post("/getAllSubscribers", authMiddleware, getAllSubscriptions);
 AdminRoute.post("/createNewsletter", authMiddleware,createNewsletter);
+AdminRoute.post("/sendBulkMail",authMiddleware,sendNewsLetterToSubscribers);
 module.exports = AdminRoute;

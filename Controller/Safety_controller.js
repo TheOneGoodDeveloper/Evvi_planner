@@ -90,7 +90,7 @@ const getSafetyById = async (req, res) => {
 const updateSafety = async (req, res) => {
   try {
     const { id,title, content, author, metaKeywords, metaDescription } = req.body;
-    
+      console.log(req.body);
     const newSafetyImage = req.files?.image
       ? req.files.image[0].filename
       : req.body.safetyImage;
@@ -127,7 +127,7 @@ const updateSafety = async (req, res) => {
     // Update the safety record in the database
     const result = await SafetyModel.updateSafety( {id,
       title,
-      content,
+      content:content||safetyRecord[0].safety_body,
       category: "Safety Net",
       safety_image: newSafetyImage || safetyRecord[0].safety_image,
       safety_thumbnail: newThumbnail || safetyRecord[0].safety_thumbnail,
@@ -135,6 +135,7 @@ const updateSafety = async (req, res) => {
       metaKeywords,
       metaDescription,
     });
+    
 
     if (result.affectedRows === 0) {
       return res

@@ -78,7 +78,7 @@ class ChangeAbitModel {
       metaKeywords,
       metaDescription,
     } = data;
-
+    console.log(data);
     return new Promise((resolve, reject) => {
       const query =
         "UPDATE Changeabit SET changeAbit_title = ?, changeAbit_content = ?, changeAbit_category = ?, changeAbit_image = ?, changeAbit_thumbnail = ?, changeAbit_author = ?, changeAbit_meta_keywords = ?, changeAbit_meta_description = ? WHERE id = ?";

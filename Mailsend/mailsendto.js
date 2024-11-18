@@ -299,35 +299,82 @@ exports.sendMailforResetPassword = async (email,resetToken) => {
     });
   };
 
-
-// Function to send a single email
-exports.sendBulkMail = async ({to, subject, content})=> {
+ const sendBulkMail = async ({ to, subject, content }) => {
     try {
       const transporter = nodemailer.createTransport({
-        host: process.env["EMAIL_HOST"],
-        port: process.env["EMAIL_PORT"],
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
         secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
       });
-
-        // Send email
-        await transporter.sendMail({
-            from: process.env.EMAIL_TO, // sender address
-            to:to, // recipient address
-            subject:"test", // email subject
-            text: content, // plain text body
-            html: `<p>${content}</p>` // HTML body
-        });
-
-        return 'success';
+  
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM,
+        to,
+        subject,
+        html: content, // HTML email content
+      });
+  
+      console.log(`Email successfully sent to: ${to}`);
+      return "success";
     } catch (err) {
-        console.error(`Failed to send email to ${to}:`, err);
-        return 'failed';
+      console.error(`Failed to send email to ${to}:`, err.message);
+      return "failed";
     }
-}
+  };
+  exports.sendNewsletterEmail = async (subscriberEmail, dynamicContent) => {
+    try {
+      // Read HTML template
+      const htmlTemplatePath = path.join(__dirname, "Email_Template/newsletter.html");
+      let emailContent = fs.readFileSync(htmlTemplatePath, "utf8");
+  
+      // Replace placeholders in the template
+      emailContent = await emailContent
+        .replace("${email}", subscriberEmail||"")
+        .replace("${insights_desc}", dynamicContent?.FirstContent|| "")
+
+        .replace("${blog_sample_desc}",dynamicContent?.ContentBlog||"")
+        .replace("${blog_title}", dynamicContent.blogs?.blog_title || "")
+        .replace("${blog_thumbnail}", dynamicContent.blogs?.blog_thumbnail || "")
+        .replace("${blog_body}", dynamicContent.blogs?.blog_body || "")
+        .replace("${blog_id}",dynamicContent.blogs?.id||"")
+
+        .replace("${ChangeAbit_title}", dynamicContent.changeABits?.changeAbit_title || "")
+        .replace("${ChangeAbit_thumbnail}", dynamicContent.changeABits?.changeAbit_thumbnail || "")
+        .replace("${ChangeAbit_content}", dynamicContent.changeABits?.changeAbit_content || "")
+        .replace("${ChangeAbit_id}",dynamicContent?.changeABits?.id||"")
+        .replace("${ChangeAbit_sample_desc}",dynamicContent?.ContentChangeABit||"")
+
+        // .replace("${safety_sample_desc}",dynamicContent?.ContentSafetyNet||"")
+        .replace("${safety_title}", dynamicContent.ContentSafetyNet || "")
+        .replace("${safety_thumbnail}", dynamicContent.safetyNets?.safety_thumbnail || "")
+        .replace("${safety_body}", dynamicContent.safetyNets?.safety_body || "")
+        .replace("${safety_id}",dynamicContent?.safetyNets?.id)
+
+        .replace("${tips_desc}", dynamicContent?.tip|| "")
+        .replace("${quote_desc}", dynamicContent.word?.quote || "")
+        .replace("${quote_author}",dynamicContent?.word?.author||"")
+        .replace("${quote_answer}",dynamicContent?.word?.answer||"")
+        .replace("${insights}",dynamicContent?.insights||"")
+  
+      // Send the email
+      console.log(emailContent);
+      return await sendBulkMail({
+        to: subscriberEmail,
+        subject: "Monthly Insights from EnrichMinds",
+        content: emailContent,
+      });
+    } catch (error) {
+      console.error(`Failed to send email to ${subscriberEmail}:`, error.message);
+      throw error;
+    }
+  };
+
+// Function to send a single email
+
 exports.sendEmailforAppointments = async(frommail,recipient, subject, templateData, templateName, icsFilePath) => {
 
     console.log(frommail,recipient, subject, templateData, templateName);

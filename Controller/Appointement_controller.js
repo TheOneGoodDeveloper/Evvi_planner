@@ -164,6 +164,8 @@ const deleteAppointment = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   createAppointment,
   updateAppointment,

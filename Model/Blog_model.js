@@ -1,7 +1,7 @@
 const connection = require("../Model/DB_connection.js");
 
 class BlogModel {
-  static async createBlog(title, content,category, blog_image,thumbnail, author, metaKeywords, metaDescription) {
+  static async createBlog({ title, content, category, blog_image, thumbnail, author, metaKeywords, metaDescription }) {
     return new Promise((resolve, reject) => {
       const query = `
         INSERT INTO blogs (blog_title, blog_body, blog_category, blog_image, blog_thumbnail, blog_author, blog_meta_keywords, blog_meta_description) 
@@ -9,7 +9,7 @@ class BlogModel {
       `;
       connection.query(
         query,
-        [title, content,category, blog_image, thumbnail, author, metaKeywords, metaDescription],
+        [title, content, category, blog_image, thumbnail, author, metaKeywords, metaDescription],
         (err, results) => {
           if (err) return reject(err);
           resolve(results);
@@ -17,6 +17,7 @@ class BlogModel {
       );
     });
   }
+  
   
 
   static async getAllBlogs() {

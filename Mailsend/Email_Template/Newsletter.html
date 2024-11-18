@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newsletter</title>
+  </head>
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background-color: #fffdfd;
+      padding: 20px;
+    "
+  >
+    <!-- Logo and Introduction -->
+    <div
+      style="
+        max-width: 700px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid blue;
+      "
+    >
+      <img
+        src="http://192.168.20.11:5173/blog_images/logo.png"
+        alt="Logo"
+        width="250"
+        style="
+          margin-bottom: 20px;
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        "
+      />
+      <h1
+        style="
+          font-size: 24px;
+          font-weight: bold;
+          text-align: center;
+          color: #0073e6;
+        "
+      >
+        Welcome to Your Monthly Update from Insights Hub!
+      </h1>
+      <p style="text-align: center; font-weight: 700">
+        Hello <span style="color: #0073e6">${email}</span>,
+      </p>
+      <p style="margin-bottom: 20px">${insights_desc}</p>
+
+      <!-- Featured Insight Section -->
+      <div id="featured-insight">
+        <h2 style="font-size: 20px; font-weight: bold">
+          📌 This Month’s Featured Insight
+        </h2>
+        <p id="blog-title">${blog_title}</p>
+        <p>${blog_sample_desc}</p>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+          "
+        >
+          <img
+            id=""
+            src="https://enrichminds.co.in/blog_images/${blog_thumbnail}"
+            alt="Featured Insight"
+            width="50%"
+            style="
+              margin-bottom: 15px;
+              height: 200px;
+              border-radius: 8px;
+              object-fit: cover;
+            "
+          />
+          <div
+            id="blog-preview"
+            style="
+              margin-bottom: 20px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              line-clamp: 3; /* Standard property */
+              max-height: 5.2em;
+              overflow: hidden;
+              width: 70%;
+            "
+          >
+            ${blog_body}
+          </div>
+        </div>
+        <a
+          href="https://enrichminds.co.in/insights/blog/${blog_id}"
+          id="read-more-link"
+          >Read the Full Article</a
+        >
+      </div>
+      <div id="featured-insight">
+        <h2 style="font-size: 20px; font-weight: bold">
+          ✨ Spotlight: ChangeABit
+        </h2>
+        <p>${ChangeAbit_sample_desc}</p>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+          "
+        >
+          <div
+            id="blog-preview"
+            style="
+              margin-bottom: 20px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              line-clamp: 3; /* Standard property */
+              max-height: 5.2em;
+              overflow: hidden;
+              width: 70%;
+            "
+          >
+            ${ChangeAbit_content}
+          </div>
+          <!-- <img
+            id=""
+            src="https://www.davidhechler.com/wp-content/uploads/2016/07/500x500-dummy-image.jpg"
+            alt="ChangeAbit"
+            width="50%"
+            style="
+              margin-bottom: 15px;
+              height: 200px;
+              border-radius: 8px;
+              object-fit: cover;
+            "
+          /> -->
+          <img
+            id=""
+            src="https://enrichminds.co.in/ChangeAbit_images/${ChangeAbit_thumbnail}"
+            alt="ChangeAbit"
+            width="50%"
+            style="
+              margin-bottom: 15px;
+              height: 200px;
+              border-radius: 8px;
+              object-fit: cover;
+            "
+          />
+        </div>
+        <a
+          href="https://enrichminds.co.in/insights/changeABit/${ChangeAbit_id}"
+          id="read-more-link"
+          >Read the Full Article</a
+        >
+      </div>
+      <div id="featured-insight">
+        <h2 style="font-size: 20px; font-weight: bold">
+          🎯 In Focus: SafetyNet Series
+        </h2>
+        <p id="blog-title">${safety_title}</p>
+        <div style="display: flex; gap: 10px; justify-content: space-between">
+          <img
+            id=""
+            src="https://enrichminds.co.in/safety_images/${safety_thumbnail}"
+            alt="Featured Insight"
+            width="50%"
+            style="
+              margin-bottom: 15px;
+              height: 200px;
+              border-radius: 8px;
+              object-fit: cover;
+            "
+          />
+          <div
+            id="blog-preview"
+            style="
+              margin-bottom: 20px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              line-clamp: 3; /* Standard property */
+              max-height: 5.2em;
+              overflow: hidden;
+              width: 70%;
+            "
+          >
+            ${safety_body}
+          </div>
+        </div>
+        <a
+          href="https://enrichminds.co.in/insights/safetyNet/${safety_id}"
+          id="read-more-link"
+          >Read the Full Article</a
+        >
+      </div>
+      <!-- Upcoming Events Section -->
+      <!-- <h2 style="font-size: 20px; font-weight: bold">
+        📅 What’s New at EnrichMinds
+      </h2>
+      <p>
+        Stay updated on what’s happening in our community and mark your calendar
+        for some exciting events!
+      </p>
+      <div style="margin-bottom: 20px">[Upcoming Events Content]</div> -->
+
+      <!-- Tips to Thrive Section -->
+      <h2 style="font-size: 20px; font-weight: bold">💡 Tips to Thrive</h2>
+      <p>A few practical ideas to integrate into your week:</p>
+      <div style="margin-bottom: 20px">${tips_desc}</div>
+
+      <!-- Words to Grow By Section -->
+      <h2 style="font-size: 20px; font-weight: bold">🌱 Words to Grow By</h2>
+      <div style="margin-bottom: 20px">
+        <p>
+          "${quote_desc}" -
+          <span style="font-weight: 700; color: #999">${quote_author}</span>
+        </p>
+        <div>${quote_answer}</div>
+      </div>
+
+      <!-- Footer Sections -->
+      <h2 style="font-size: 20px; font-weight: bold">
+        📚 Explore the Full Insights Hub
+      </h2>
+      <p>
+        ${insights}
+        <a href="https://enrichminds.co.in/insights" target="_blank">
+          Visit the Insights Hub for articles, guides, and tools that inspire
+          change.</a
+        >
+      </p>
+
+      <h2 style="font-size: 20px; font-weight: bold">
+        🌍 Join Our Community Online
+      </h2>
+      <p>
+        Stay in touch! Follow us on
+        <a
+          href="https://www.linkedin.com/company/enrichminds-consulting/"
+          style="color: #0073e6; text-decoration: none"
+          target="_blank"
+          >LinkedIn</a
+        >,
+        <a
+          href="https://www.instagram.com/enrichminds4u/ "
+          style="color: #0073e6; text-decoration: none"
+          >Instagram</a
+        >, and
+        <a
+          href="https://www.instagram.com/enrichminds4u/ "
+          style="color: #0073e6; text-decoration: none"
+          >Facebook</a
+        >.
+      </p>
+
+      <h2 style="font-size: 20px; font-weight: bold">🗣 We Value Your Voice</h2>
+      <p>
+        Have feedback or ideas? Reply to this
+        <a href="mailto:feedback@enrichminds.co.in">email</a> – we’d love to
+        hear from you!
+      </p>
+
+      <h2 style="font-size: 20px; font-weight: bold">
+        🔍 Expert Guidance, Just a Click Away
+      </h2>
+      <p>
+        Ready to explore more? Discover counseling options and psychometric
+        assessments to help you unlock your full potential.
+      </p>
+      <div>
+        <h2
+          style="
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #0073e6;
+          "
+        >
+          Thank you for being part of the EnrichMinds community
+        </h2>
+        <p>Together, we’re making each day a step closer to our best selves.</p>
+        <div>
+          <p style="margin-bottom: -20px; font-weight: 700">Warmly,</p>
+          <p style="font-size: 14px">
+            Shanthi Subramani, <br />EnrichMinds Consulting.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer Section -->
+      <footer
+        style="
+          font-size: 12px;
+          color: #999;
+          background: #d6d6d6;
+          border-radius: 5px;
+          padding: 5px;
+          text-align: center;
+        "
+      >
+        <p style="color: blue">
+          You’re receiving this email because you subscribed to Insights Hub
+          through our website.
+        </p>
+        <p>
+          <a href="#" style="color: #999">Unsubscribe</a> |
+          <a href="https://enrichminds.co.in/privacy-policy" style="color: #999"
+            >Privacy Policy</a
+          >
+        </p>
+      </footer>
+    </div>
+  </body>
+  <!-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Function to fetch featured blog data
+      async function fetchFeaturedBlog() {
+        try {
+          const response = await axios.get(
+            "http://192.168.20.5:5000/getAllBlogs"
+          );
+          const data = response.data;
+          console.log(data.blogs[0].blog_title);
+
+          // Sort blogs by date
+          const sortedBlogs = data.blogs.sort(
+            (a, b) => new Date(b.blog_date) - new Date(a.blog_date)
+          );
+
+          // Get the latest featured blog
+          const featuredBlogs = sortedBlogs[0];
+
+          // Update HTML elements with the featured blog data
+          document.getElementById(
+            "blog-title"
+          ).innerText = Get inspired by our latest piece on "${featuredBlogs.blog_title}". Explore strategies to elevate your personal and professional life.;
+          document.getElementById(
+            "blog-image"
+          ).src = http://192.168.20.5:5000/blog_images/${featuredBlogs.blog_image}; // Update image path
+          document.getElementById("blog-preview").innerHTML =
+            featuredBlogs.blog_body;
+
+          // Add the Read Full Article link dynamically
+          const readMoreLink = document.getElementById("read-more-link");
+          readMoreLink.setAttribute("data-id", featuredBlogs.id); // Store the blog ID
+
+          // Add click event listener to handle blog ID when the link is clicked
+          readMoreLink.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            const blogId = readMoreLink.getAttribute("data-id");
+            console.log("Blog ID:", blogId);
+            // You can now navigate to the full article page or take other actions
+            window.location.href = /blog/${blogId}; // Example redirect to blog page
+          });
+        } catch (error) {
+          console.error("Error fetching featured blog:", error);
+        }
+      }
+
+      // Fetch and render the featured blog
+      fetchFeaturedBlog();
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+</html>

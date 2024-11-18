@@ -51,7 +51,70 @@ class SafetyModel {
   }
 
   // Update an existing safety record
-  static async updateSafety(id, safetyTitle, safetyBody,safety_category, safetyImage, safetyThumbnail, safetyAuthor, metaKeywords, metaDescription) {
+  // static async updateSafety({
+  //   id,
+  //   title,
+  //   content,
+  //   category,
+  //   safety_image,
+  //   safety_thumbnail,
+  //   author,
+  //   metaKeywords,
+  //   metaDescription
+  // }) {
+  //   return new Promise((resolve, reject) => {
+  //     const query = `
+  //       UPDATE safety SET 
+  //         safety_title = ?, 
+  //         safety_body = ?,
+  //         safety_category = ?, 
+  //         safety_image = ?, 
+  //         safety_thumbnail = ?, 
+  //         safety_author = ?, 
+  //         safety_meta_keywords = ?, 
+  //         safety_meta_description = ? 
+  //       WHERE id = ?
+  //     `;
+
+  //     const values = [
+  //       title,
+  //       content,
+  //       category,
+  //       safety_image,
+  //       safety_thumbnail,
+  //       author,
+  //       metaKeywords,
+  //       metaDescription,
+  //       id
+  //     ];
+
+  //     connection.query(query, values, (err, results) => {
+  //       if (err) return reject(err);
+  //       resolve(results);
+  //     });
+  //   });
+  // }
+
+  static async updateSafety({
+    id,
+    title,
+    content,
+    category,
+    safety_image,
+    safety_thumbnail,
+    author,
+    metaKeywords,
+    metaDescription
+  }) {
+    console.log(id,
+      title,
+      content,
+      category,
+      safety_image,
+      safety_thumbnail,
+      author,
+      metaKeywords,
+      metaDescription);
     return new Promise((resolve, reject) => {
       const query = `
         UPDATE safety SET 
@@ -65,14 +128,23 @@ class SafetyModel {
           safety_meta_description = ? 
         WHERE id = ?
       `;
-      connection.query(
-        query,
-        [safetyTitle, safetyBody,safety_category, safetyImage, safetyThumbnail, safetyAuthor, metaKeywords, metaDescription, id],
-        (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        }
-      );
+  
+      const values = [
+        title,
+        content,
+        category,
+        safety_image,
+        safety_thumbnail,
+        author,
+        metaKeywords,
+        metaDescription,
+        id,
+      ];
+  
+      connection.query(query, values, (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      });
     });
   }
 

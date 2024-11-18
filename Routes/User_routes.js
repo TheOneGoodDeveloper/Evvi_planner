@@ -92,7 +92,7 @@ UserRoute.get("/getchangeAbit/:id",getChangeAbitById)
 
 UserRoute.get("/getAllSafetyList",getAllSafety);
 UserRoute.get("/getSafety/:id",getSafetyById)
-
+UserRoute.get("unsubscribeToNewsLetter",unsubscribe)
 UserRoute.post("/createComments", createComment);
 UserRoute.get("/getCommentByBlogId/:id", getCommentByBlogId);
 UserRoute.post("/auth/requestPasswordReset", requestPasswordReset);

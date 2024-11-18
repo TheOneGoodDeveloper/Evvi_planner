@@ -101,7 +101,8 @@ const updateChangeAbit = async (req, res) => {
         .status(400)
         .json({ status: false, message: "Please Enter required Fields" });
     }
-    console.log(req.files?.image);
+    console.log(req.body);
+    console.log(req.files);
     // Handle files
     const newChangeAbitImage = req.files?.image
       ? req.files.image[0].filename
@@ -140,7 +141,7 @@ const updateChangeAbit = async (req, res) => {
       title,
       content,
       category: "ChangeABit",
-      changeAbitImage: newChangeAbitImage || changeAbit.changeAbitImage,
+      changeAbitImage: newChangeAbitImage || changeAbit.changeAbit_image,
       thumbnail: newThumbnail || changeAbit.thumbnail,
       author,
       metaKeywords,
