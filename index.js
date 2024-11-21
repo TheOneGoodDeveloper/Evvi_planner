@@ -31,6 +31,7 @@ app.use(
   "/changeAbit_images",
   express.static(path.join(__dirname, "/Assets/changeAbit_images"))
 );
+app.use("/src", express.static(path.join(__dirname, "/Assets/src")));
 app.use(
   "/safety_images",
   express.static(path.join(__dirname, "/Assets/safety_images"))
