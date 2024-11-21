@@ -78,6 +78,14 @@ const {
   deleteNewsletter,
   sendNewsLetterToSubscribers,
 } = require("../Controller/NewsLetter_controller.js");
+const {
+  createAppointment,
+  updateAppointment,
+  getAppointmentById,
+  deleteAppointment,
+  getAppointments,
+  getAvailableSlots
+} = require("../Controller/Appointement_controller.js");
 // user Api's
 AdminRoute.post("/login", adminLogin);
 AdminRoute.post(
@@ -110,6 +118,7 @@ AdminRoute.post("/getAllSafetyList",authMiddleware,getAllSafety);
 AdminRoute.get("/getSafety/:id",authMiddleware,getSafetyById)
 AdminRoute.delete("/deleteSafety/:id",authMiddleware,deleteSafety);
 // AdminRoute.
+AdminRoute.post("/getAllAppointments",authMiddleware,getAppointments)
 // reset password
 AdminRoute.post("/requestPasswordReset", authMiddleware, requestPasswordReset);
 AdminRoute.post("/reset-password", authMiddleware, resetPassword);

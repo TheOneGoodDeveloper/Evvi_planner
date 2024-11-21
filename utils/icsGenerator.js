@@ -3,78 +3,65 @@ const fs = require("fs");
 const path = require("path");
 
 const parseSlot = (slot) => {
-  const [timeRange, period] = slot.trim().split(/\s*-\s*/); // Split start and end time
-  const [time, period1] = timeRange.split(/[:\.\s]+/); // Separate time from AM/PM
-  const hour = parseInt(time); // Get the hour
-  const minute = slot.includes(".") ? parseInt(slot.split(".")[1].split(" ")[0]) : 0; // Get the minute
-  
-  let adjustedHour = hour;
-  let adjustedMinute = minute;
+  const [timeRange] = slot.trim().split(/\s*-\s*/); // Extract start time from slot
+  const [hourStr, minuteStr] = timeRange.split(/[:.]/); // Split hour and minute
+  const period = timeRange.slice(-2).toLowerCase(); // Extract AM/PM
+  let hour = parseInt(hourStr, 10);
+  let minute = parseInt(minuteStr || "0", 10); // Default to 0 if no minute specified
 
   // Adjust hour for AM/PM
-  if (period1.toLowerCase() === "pm" && adjustedHour !== 12) {
-    adjustedHour += 12; // Convert PM times to 24-hour format
-  } else if (period1.toLowerCase() === "am" && adjustedHour === 12) {
-    adjustedHour = 0; // Adjust 12 AM to 0 hours
+  if (period === "pm" && hour !== 12) {
+    hour += 12; // Convert PM times to 24-hour format
+  } else if (period === "am" && hour === 12) {
+    hour = 0; // Adjust 12 AM to 0 hours
   }
 
-  // Adjust for IST (Indian Standard Time) - UTC +5:30
-  const IST_OFFSET_HOURS = 5;
-  const IST_OFFSET_MINUTES = 30;
+  return { hour, minute };
+};
 
-  // Convert to UTC by subtracting 5 hours and 30 minutes
-  let startHour = adjustedHour - IST_OFFSET_HOURS;
-  let startMinute = adjustedMinute - IST_OFFSET_MINUTES;
-
-  // Handle negative minutes (borrow an hour if necessary)
-  if (startMinute < 0) {
-    startMinute += 60;
-    startHour -= 1; // Borrow 1 hour from the hour
-  }
-
-  // Handle negative hour (wrap around the day if necessary)
-  if (startHour < 0) {
-    startHour += 24; // Ensure hour stays within a 24-hour range
-  }
-
-  return { startHour, startMinute };
+const convertToUTC = (year, month, day, hour, minute) => {
+  const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+  return [
+    date.getUTCFullYear(),
+    date.getUTCMonth() + 1,
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+  ];
 };
 
 const createAppointmentICS = async (appointmentData) => {
   const { selectDate, slots, name, location, selectedAssessment, email, duration } = appointmentData;
+
   const [year, month, day] = selectDate.split("-").map(Number);
-  const { startHour, startMinute } = parseSlot(slots.split("-")[0]);
+  const { hour: startHour, minute: startMinute } = parseSlot(slots);
 
   console.log("Parsed Date:", { year, month, day });
-  console.log("Parsed Time:", { startHour, startMinute });
+  console.log("Parsed Time (IST):", { startHour, startMinute });
 
   // Validate parsed date and time values
-  if (
-    !year ||
-    !month ||
-    !day ||
-    startHour === undefined ||
-    startMinute === undefined
-  ) {
+  if (!year || !month || !day || startHour === undefined || startMinute === undefined) {
     throw new Error("Invalid date or time format in selectDate or slots.");
   }
 
-  // If no duration is provided, set it to 1 hour by default
-  const eventDuration = duration || 1;
+  const utcStart = convertToUTC(year, month, day, startHour, startMinute);
+  const eventDuration = duration || 1; // Default to 1 hour if no duration provided
 
   const event = {
-    start: [year, month, day, startHour, startMinute],
+    start: utcStart,
     duration: { hours: eventDuration },
     title: `Appointment with ${name}`,
     description: selectedAssessment,
-    location: location,
+    location: "online",
     url: "https://enrichminds.co.in",
     status: "CONFIRMED",
     organizer: { name: "Enrich Minds", email: "feedback@enrichminds.co.in" },
     attendees: [{ name, email }],
+    productId: "ics.js",
   };
 
-  console.log("Event object:", event); // Log the event object for debugging
+  console.log("Event object:", event);
 
   const icsFolderPath = path.join(__dirname, "../Assets/ics");
   const icsFilePath = path.join(icsFolderPath, `appointment.ics`);
@@ -87,7 +74,7 @@ const createAppointmentICS = async (appointmentData) => {
   return new Promise((resolve, reject) => {
     createEvent(event, (error, value) => {
       if (error) {
-        console.error("ICS Creation Error:", error); // Log the error in detail
+        console.error("ICS Creation Error:", error);
         reject(new Error(`Error creating ICS file: ${JSON.stringify(error)}`));
       } else {
         fs.writeFileSync(icsFilePath, value);

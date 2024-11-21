@@ -47,7 +47,8 @@ const createAppointment = async (req, res) => {
     console.log(icsFilePath);
     // Send emails
     // const clientRecipient = "feedback@enrichminds.co.in";
-    const clientRecipient = process.env.MAIL_APP
+    // const clientRecipient = process.env.MAIL_APP;
+    const clientRecipient = "appointment@enrichminds.co.in"
     const userRecipient = email;
     const subjectClient = "New Appointment Received";
     const subjectUser = "Appointment Confirmation";
@@ -92,7 +93,7 @@ const createAppointment = async (req, res) => {
 const getAppointments = async (req, res) => {
   try {
     const results = await Appointment.getAll();
-    res.status(200).json(results);
+    res.status(200).json(results.reverse());
   } catch (error) {
     console.error("Database error:", error);
     res.status(500).json({ error: "Database error" });
@@ -166,7 +167,42 @@ const deleteAppointment = async (req, res) => {
   }
 };
 
+const getAvailableSlots = async (req, res) => {
+  try {
+      const { date } = req.body;
 
+      if (!date) {
+          return res.status(400).json({ error: 'Date is required' });
+      }
+
+      // Predefined slots
+      const predefinedSlots = [
+          '6.00pm - 7.00pm',
+          '7.00pm - 8.00pm',
+          '8.00pm - 9.00pm',
+      ];
+
+      // Get booked slots for the given date
+      const bookedSlots = await Appointment.getBookedSlots(date);
+
+      // Filter out booked slots
+      const availableSlots = predefinedSlots.filter(
+          (slot) => !bookedSlots.includes(slot)
+      );
+        // console.log(availableSlots);
+      return res.status(200).json({
+          success: true,
+          date: date,
+          availableSlots,
+      });
+  } catch (error) {
+      console.error('Error fetching available slots:', error);
+      res.status(500).json({
+          success: false,
+          message: 'An error occurred while fetching available slots',
+      });
+  }
+};
 
 module.exports = {
   createAppointment,
@@ -174,4 +210,5 @@ module.exports = {
   getAppointmentById,
   deleteAppointment,
   getAppointments,
+  getAvailableSlots
 };

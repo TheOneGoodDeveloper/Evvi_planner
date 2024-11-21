@@ -50,6 +50,7 @@ const {
   getAppointmentById,
   deleteAppointment,
   getAppointments,
+  getAvailableSlots
 } = require("../Controller/Appointement_controller.js");
 const {
   createReply,
@@ -101,6 +102,7 @@ UserRoute.post("/replyToComment", createReply);
 UserRoute.post("/getReplies", getReplies);
 UserRoute.post("/subscribe", subscribe);
 UserRoute.post("/appointments", upload.single("file"), createAppointment);
+UserRoute.post("/checkSlots",getAvailableSlots)
 UserRoute.post("/registerDiscovery",createDiscovery);
 
 module.exports = UserRoute;

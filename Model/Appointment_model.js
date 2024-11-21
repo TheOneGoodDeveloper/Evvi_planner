@@ -92,6 +92,20 @@ const Appointment = {
       });
     });
   },
+  getBookedSlots: (selectDate) => {
+    return new Promise((resolve, reject) => {
+      const sql = "SELECT slot FROM appointments WHERE selectDate = ?";
+      db.query(sql, [selectDate], (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        // Return an array of booked slots
+        resolve(results.map(row => row.slot));
+      });
+    });
+  },
+  
 };
+
 
 module.exports = Appointment;
