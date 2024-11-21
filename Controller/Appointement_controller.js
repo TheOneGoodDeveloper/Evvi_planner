@@ -1,8 +1,9 @@
 const Appointment = require("../Model/Appointment_model.js");
 const { sendEmailforAppointments } = require("../Mailsend/mailsendto.js");
 const fs = require("fs");
-
+const dotenv = require("dotenv")
 const { createAppointmentICS } = require("../utils/icsGenerator.js");
+dotenv.config();
 
 // Create a new appointment
 const createAppointment = async (req, res) => {
@@ -45,7 +46,8 @@ const createAppointment = async (req, res) => {
     const results = await Appointment.create(appointmentData);
     console.log(icsFilePath);
     // Send emails
-    const clientRecipient = "feedback@enrichminds.co.in";
+    // const clientRecipient = "feedback@enrichminds.co.in";
+    const clientRecipient = process.env.MAIL_APP
     const userRecipient = email;
     const subjectClient = "New Appointment Received";
     const subjectUser = "Appointment Confirmation";
