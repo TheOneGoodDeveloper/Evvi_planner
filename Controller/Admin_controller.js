@@ -2,7 +2,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const connection = require("../Model/DB_connection.js");
-
+const dotenv =require("dotenv");
+dotenv.config();
 const authMiddleware = (req, res, next) => {
   let token = req.headers["authorization"] ? req.headers["authorization"] : "";
 
