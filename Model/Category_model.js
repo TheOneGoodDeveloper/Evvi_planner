@@ -1,4 +1,4 @@
-const connection = require("../Database/DB_connection.js"); // MySQL connection pool
+const connection = require("../Model/DB_connection.js"); // MySQL connection pool
 
 class CategoryModel {
   static async getAllCategory() {
